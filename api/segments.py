@@ -11,11 +11,16 @@ class Rest:
     CMD_LIST = 'list'
     CMD_LIST_STORE = 'liststore'
     CMD_SEGMENT = 'segment'
+    CMD_SEGMENT_CREATE = 'segmentcreate'
+    CMD_SEGMENT_DELETE = 'segmentdelete'
     
-    COMMANDS = [CMD_LIST, CMD_LIST_STORE, CMD_SEGMENT]
+    COMMANDS = [CMD_LIST, CMD_LIST_STORE, CMD_SEGMENT, CMD_SEGMENT_CREATE,CMD_SEGMENT_DELETE]
     
     VERB_LIST = "list"
     VERB_SEGMENT = "get"
+    VERB_SEGMENT_CREATE = "createOrRename"
+    VERB_SEGMENT_DELETE = "delete"
+    VERB_CRITERION_CREATE = "criterion/createOrUpdate"
 
     api_base = constants.TOP_LEVEL_URL + "/service/rest/segments/"
 
@@ -33,6 +38,7 @@ class Rest:
         parser.add_argument('--limit', dest='limit', help='Number of segments', default=3, type=int)
         parser.add_argument('--path', dest='path', help='Path where to read and write data', default='data')
         parser.add_argument('--id', dest='id', help='Id of the segment', default=1664, type=int)
+        parser.add_argument('--definition', dest='definition', help='Definition of the segment', type=argparse.FileType('r'))
 
         args = parser.parse_args(input_args)
 
@@ -67,5 +73,22 @@ class Rest:
                 print "Segment " + str(args.id) + " saved to " + segment_json_path
             else:
                 print "Did not find any segment " + str(args.id) + ". Call liststore first."
+        elif args.cmd == Rest.CMD_SEGMENT_CREATE:
+            json_content = json.load(args.definition)
+            segment_name = json_content["name"]
+            print "Create segment " + segment_name
+            response = http.put_json(self.api_base, Rest.VERB_SEGMENT_CREATE, {'segment':json.dumps({'name': segment_name})}, {})
+            if response["name"] == segment_name:
+                segment_id = response["id"]
+                print "segment created " + str(segment_id)
+                segment_criteria = json_content["criteria"]
+                for criteria in segment_criteria:
+                    response = http.put_json(self.api_base, Rest.VERB_CRITERION_CREATE, {'segmentId':segment_id, 'criterion':json.dumps(criteria)}, {})
+                    print "criterion created " + str(response)
+            else:
+                print "segment not created"
+        elif args.cmd == Rest.CMD_SEGMENT_DELETE:
+            response = http.put_json_no_response(self.api_base, Rest.VERB_SEGMENT_DELETE, {'id':args.id}, {})
+            print "segment deleted " + str(args.id)
         else:
             print "unknown command " + args.cmd

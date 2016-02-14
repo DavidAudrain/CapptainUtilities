@@ -21,5 +21,30 @@ def setbasicauthentication(top_level_url, appid, apikey):
 
 def get_json(rest_api_base, verb, json_content):
     payload = urllib.urlencode(json_content)
-    requestUrl = rest_api_base + verb + "?" + payload
-    return json.loads(urllib2.urlopen(requestUrl).read())
+    request_url = rest_api_base + verb + "?" + payload
+    return json.loads(urllib2.urlopen(request_url).read())
+
+def put_json(rest_api_base, verb, json_content, json_post_content):
+    payload = urllib.urlencode(json_content)
+    post_payload = json.dumps(json_post_content)
+    request_url = rest_api_base + verb + "?" + payload
+    #response = urllib2.urlopen(request_url, payload, {'Content-Type': 'application/json'})
+    try:
+        response = urllib2.urlopen(request_url, post_payload)
+        return json.loads(response.read())
+    except urllib2.HTTPError, err:
+        print err.code
+        print err.reason
+        print err.read()
+
+def put_json_no_response(rest_api_base, verb, json_content, json_post_content):
+    payload = urllib.urlencode(json_content)
+    post_payload = json.dumps(json_post_content)
+    request_url = rest_api_base + verb + "?" + payload
+    #response = urllib2.urlopen(request_url, payload, {'Content-Type': 'application/json'})
+    try:
+        response = urllib2.urlopen(request_url, post_payload)
+    except urllib2.HTTPError, err:
+        print err.code
+        print err.reason
+        print err.read()
