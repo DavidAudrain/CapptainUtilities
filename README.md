@@ -2,23 +2,23 @@
 
 Python scripts to interact with [app.capptain.com](https://app.capptain.com/) REST APIs.
 
-## [Segments API](https://app.capptain.com/doc/SaaS/Segments%20API/index.html)
+## Interacting with [Segments API](https://app.capptain.com/doc/SaaS/Segments%20API/index.html)
 
 ### List 5 segments
 
-python capptain.py --appid <app id> --apikey <app key> --api segments --limit 5
+`python capptain.py --appid <app id> --apikey <app key> --api segments --limit 5`
 
 ### Store given application segments to data/<app id>/segments/list.json
 
-python capptain.py --appid <app id> --apikey <app key> --api segments --cmd liststore
+`python capptain.py --appid <app id> --apikey <app key> --api segments --cmd liststore`
   
 ### Store given application segments to data/<app id>/segments/segment_<segment id>.json
 
-python capptain.py --appid <app id> --apikey <app key> --api segments --cmd segment --id <segment id>
+`python capptain.py --appid <app id> --apikey <app key> --api segments --cmd segment --id <segment id>`
 
 ### Create a segment from a template json defining the criteria
   
-python capptain.py --appid <app id> --apikey <app key> --api segments --cmd segmentcreate --definition <path to template json> 
+`python capptain.py --appid <app id> --apikey <app key> --api segments --cmd segmentcreate --definition <path to template json>` 
 
 Here is a sample json
 ```
