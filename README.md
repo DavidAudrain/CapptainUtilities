@@ -8,11 +8,16 @@ Python scripts to interact with [app.capptain.com](https://app.capptain.com/) RE
 
 `python capptain.py --appid <app id> --apikey <app key> --api segments --limit 5`
 
-### Store given application segments to data/<app id>/segments/list.json
+### Store given application segments
+
+Segments will be stored to `data/<app id>/segments/list.json`
 
 `python capptain.py --appid <app id> --apikey <app key> --api segments --cmd liststore`
   
-### Store given application segments to data/<app id>/segments/segment_<segment id>.json
+### Store given application segments
+
+Segment will be stored to  `data/<app id>/segments/segment_<segment id>.json`
+
 
 `python capptain.py --appid <app id> --apikey <app key> --api segments --cmd segment --id <segment id>`
 
