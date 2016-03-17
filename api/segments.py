@@ -56,7 +56,8 @@ class Rest:
         parser.add_argument('--cmd', dest='cmd', help='Command', default=Rest.CMD_LIST, choices=Rest.COMMANDS)
         parser.add_argument('--limit', dest='limit', help='Number of segments', default=3, type=int)
         parser.add_argument('--path', dest='path', help='Path where to read and write data', default='data')
-        parser.add_argument('--id', dest='id', help='Id of the segment', default=1664, type=int)
+        parser.add_argument('--id', dest='id', help='Id of the segment')
+        parser.add_argument('--name', dest='name', help='Name of the segment')
         parser.add_argument('--definition', dest='definition', help='Definition of the segment', type=argparse.FileType('r'))
 
         args = parser.parse_args(input_args)
@@ -119,7 +120,18 @@ class Rest:
             else:
                 print "Segment " + segment_name + " not created"
         elif args.cmd == Rest.CMD_SEGMENT_DELETE:
-            self.delete_segment(args.id)
-            print "segment deleted " + str(args.id)
+            if args.id != None:
+                self.delete_segment(args.id)
+                print "segment deleted " + str(args.id)
+            elif args.name != None:
+                segment_name = args.name
+                segments = self.get_all_segments(2)
+                segments_found = filter(lambda segment: segment["name"] == segment_name, segments["data"])
+                if len(segments_found) == 1:
+                    self.delete_segment(str(segments_found[0]["id"]))   
+                else:
+                    print "Could not delete segment " + segment_name + " because it doesn't exist"     
+            else:
+                print "Command " + Rest.CMD_SEGMENT_DELETE + " expects --id <segment id> or --name <segment name>"
         else:
             print "unknown command " + args.cmd
