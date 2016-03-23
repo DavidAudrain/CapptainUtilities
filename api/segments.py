@@ -56,7 +56,7 @@ class Rest:
         parser.add_argument('--cmd', dest='cmd', help='Command', default=Rest.CMD_LIST, choices=Rest.COMMANDS)
         parser.add_argument('--limit', dest='limit', help='Number of segments', default=3, type=int)
         parser.add_argument('--path', dest='path', help='Path where to read and write data', default='data')
-        parser.add_argument('--id', dest='id', help='Id of the segment')
+        parser.add_argument('--id', dest='id', help='Id of the segment', type=int)
         parser.add_argument('--name', dest='name', help='Name of the segment')
         parser.add_argument('--definition', dest='definition', help='Definition of the segment', type=argparse.FileType('r'))
 
@@ -78,10 +78,12 @@ class Rest:
                 print "List of segments saved to " + list_json_path
                 
         elif args.cmd == Rest.CMD_SEGMENT:
-            list_json = open(self.get_list_path(args.path), 'r')
+            list_path = self.get_list_path(args.path)
+            list_json = open(list_path, 'r')
             json_content = json.load(list_json)
             list_json.close()
             list_of_segments = json_content["data"]
+            print "Read " + str(len(list_of_segments)) + " segments from " + list_path
             
             filtered_segments = filter(lambda seg: seg["id"] == args.id, list_of_segments)
             if len(filtered_segments) > 0:
