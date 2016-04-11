@@ -36,7 +36,7 @@ class Rest:
     def get_all_segments(self, limit):
         response = http.get_json(self.api_base, Rest.VERB_LIST, {'config':json.dumps({'sortField': 'name', 'sortDirection': 'asc', 'limit': limit})})
         if "err_code" in response:
-            print "Failed to list segments (" + response + ")"
+            print "Failed to list segments "
             return None
         elif "totalLength" in response:
             return http.get_json(self.api_base, Rest.VERB_LIST, {'config':json.dumps({'sortField': 'name', 'sortDirection': 'asc', 'limit': response["totalLength"]})})
