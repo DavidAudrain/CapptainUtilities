@@ -13,8 +13,9 @@ class Rest:
     CMD_SEGMENT = 'segment'
     CMD_SEGMENT_CREATE = 'segmentcreate'
     CMD_SEGMENT_DELETE = 'segmentdelete'
+    CMD_SEGMENTS_STORE = 'segmentsstore'
     
-    COMMANDS = [CMD_LIST, CMD_LIST_STORE, CMD_SEGMENT, CMD_SEGMENT_CREATE,CMD_SEGMENT_DELETE]
+    COMMANDS = [CMD_LIST, CMD_LIST_STORE, CMD_SEGMENT, CMD_SEGMENT_CREATE,CMD_SEGMENT_DELETE,CMD_SEGMENTS_STORE]
     
     VERB_LIST = "list"
     VERB_SEGMENT = "get"
@@ -76,6 +77,22 @@ class Rest:
                 list_json.write(json.dumps(response, sort_keys=True, indent=2))
                 list_json.close()
                 print "List of segments saved to " + list_json_path
+                
+        elif args.cmd == Rest.CMD_SEGMENTS_STORE:
+            app_path = os.path.join(args.path, self.appid, 'segments')
+            list_path = self.get_list_path(args.path)
+            list_json = open(list_path, 'r')
+            json_content = json.load(list_json)
+            list_json.close()
+            list_of_segments = json_content["data"]
+            for segment in list_of_segments:
+                segment_id = segment["id"]
+                response = http.get_json(self.api_base, Rest.VERB_SEGMENT, {'id':segment_id})
+                segment_json_path = self.get_segment_path(args.path, segment_id)
+                list_json = open(segment_json_path, 'w')
+                list_json.write(json.dumps(response, sort_keys=True, indent=2))
+                list_json.close()
+                print "Segment " + str(segment_id) + " saved to " + segment_json_path
                 
         elif args.cmd == Rest.CMD_SEGMENT:
             list_path = self.get_list_path(args.path)
