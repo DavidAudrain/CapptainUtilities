@@ -5,15 +5,20 @@ import urllib
 import urllib2
 from helper import http
 from api import constants 
+from api import device
 from api import segments
 
+APIS = [segments.API_NAME, device.API_NAME]
 
 def application_process_arguments(appid, apikey, arguments):
-    http.setbasicauthentication(top_level_url=constants.TOP_LEVEL_URL, appid=appid, apikey=apikey)
 
-    if known_args.api == segments.SEGMENTS_API_NAME:
+    if known_args.api == segments.API_NAME:
+        http.setbasicauthentication(top_level_url=constants.TOP_LEVEL_URL, appid=appid, apikey=apikey)
         segments_api = segments.Rest(appid)
         segments_api.process(unknown_args)
+    elif known_args.api == device.API_NAME:
+        device_api = device.Rest(appid, apikey)
+        device_api.process(unknown_args)
     else:
         print "unknown api" 
     
@@ -23,7 +28,7 @@ parser.add_argument('--appid', dest='appid', help='Application ID. See Capptain 
 parser.add_argument('--apikey', dest='apikey', help='API Key')
 parser.add_argument('--appregistry', dest='appregistry', help='JSON file listing appid and apikey by appname')
 parser.add_argument('--apps', dest='apps', help='List of app names to apply the command')
-parser.add_argument('--api', required=True, dest='api', help='API', choices=[segments.SEGMENTS_API_NAME])
+parser.add_argument('--api', required=True, dest='api', help='API', choices=APIS)
 
 # Parse known arguments at this point
 # other arguments may be known of underlying API

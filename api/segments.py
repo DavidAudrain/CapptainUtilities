@@ -4,7 +4,7 @@ import json
 import os
 from helper import http
 
-SEGMENTS_API_NAME="segments"
+API_NAME="segments"
 
 class Rest:
 
