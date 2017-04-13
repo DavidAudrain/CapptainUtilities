@@ -1,3 +1,7 @@
+# Deprecated as Capptain as been bought by Microsoft
+
+[See TechCrunch](https://techcrunch.com/2014/05/28/microsoft-buys-capptain-a-mobile-app-management-platform-based-in-paris/)
+
 # CapptainUtilities
 
 Python scripts to interact with [app.capptain.com](https://app.capptain.com/) REST APIs.
